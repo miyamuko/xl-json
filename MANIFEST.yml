@@ -1,0 +1,26 @@
+package: json
+version: 0.1.2
+
+sources:
+  include:
+    - site-lisp/json/**/*.l
+  exclude:
+    - site-lisp/json/**/test-*.l
+    - site-lisp/json/**/*-test.l
+    - site-lisp/json/**/examples/*.l
+
+document:
+  - site-lisp/json/docs/README.rd
+
+files:
+  include:
+    - site-lisp/**/*.l
+    - site-lisp/**/*.lc
+    - site-lisp/json/lib/*.dll
+    - site-lisp/json/examples/**/*.*
+    - site-lisp/json/docs/**/*
+    - site-lisp/json/docs/**/*.*
+    - site-lisp/json/src/**/*.*
+  exclude:
+    - site-lisp/json-scratch.l
+    - site-lisp/json/tests/*.*

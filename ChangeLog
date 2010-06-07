@@ -1,0 +1,78 @@
+2008-07-12  MIYAMUKO Katsuyuki
+
+	* json 0.1.2 リリース!
+
+	* ライセンスファイルを同梱
+
+2008-02-23  MIYAMUKO Katsuyuki
+
+	* json 0.1.1 リリース!
+
+	* json-load を json-decode にした。
+
+2008-02-17  MIYAMUKO Katsuyuki
+
+	* json 0.1.0 リリース!
+
+	* (scan-json-toplevel): 空白も無視
+	  (delete-json-padding): JSONP の関数名をかなり柔軟に指定して削除
+
+	* - 数値の解析に失敗した場合のエラーメッセージを改善
+	  - strict が t のときに toplevel の文字列を受け付けていたのを修正
+	  - strict が nil のときは JSON padding だけを消去する。
+
+	* (skip-bare-word): fix indent
+
+	* マクロ化
+	  タイポ修正
+
+	* できる限りマクロ化して高速化。
+
+	* (skip-bare-word): 空白文字を含んだ bare word に対応。
+
+	* (json-load-file): filename の check を追加
+
+	* add json-load-file test
+
+	* tests に移動。
+
+	* bumped version number to 0.1.0
+
+	* エラーメッセージの最後にピリオドをつけた
+
+	* (raise-end-of-json-error): 文字列ならクォートしない。
+
+	* :hashtable => :hash-table
+
+	* (scan-json-object): hash-table-test を設定
+
+	* (json-load "") で #\NUL がエラーメッセージに含まれないようにした。
+
+	* (with-temporary-buffer): contents を取らないようにした。
+
+	* (scan-json-object): そのまま返す場合は identiry を使えばよい。
+
+	* (json-load-file): ファイルからロードできるようにした。
+
+	* (json-load): 引数名を変更
+
+	* (skip-bare-word): マクロ化
+	  (skip-to-object/array): オブジェクトの開始までごみをスキップ
+
+	* 例外名を export
+
+	* (json-load): strict が nil なら最初の空白を読み飛ばす。
+
+	* loader.l がだいたいできた。
+
+2008-02-16  MIYAMUKO Katsuyuki
+
+	* とりあえずコミット。
+
+	* main.l => loader.l
+
+	* ignore *.lc, XTAGS
+
+	* no need to ni-autoload.
+
+	* json 作成開始
