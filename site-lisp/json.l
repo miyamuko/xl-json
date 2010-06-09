@@ -13,6 +13,7 @@
 (in-package :user)
 
 (require "json/version")
+(require "json/encoder")
 (require "json/decoder")
 
 

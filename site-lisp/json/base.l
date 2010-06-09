@@ -16,6 +16,7 @@
   (require "json/package")
   (require "json/utils")
   (require "json/macros")
+  (require "json/amacros")
   (require "json/conditions")
   )
 

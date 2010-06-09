@@ -1,8 +1,26 @@
+2008-07-20  MIYAMUKO Katsuyuki
+
+	* (write-each, puts): macros.l に移動
+
+	* (encode-unicode-char): \uxxxx 表記を生成する
+
+	* (*re*): \x20-\x7e までは ascii
+
 2008-07-12  MIYAMUKO Katsuyuki
 
 	* json 0.1.2 リリース!
 
 	* ライセンスファイルを同梱
+
+2008-03-22  MIYAMUKO Katsuyuki
+
+	* (write-each): prefix, suffix, infix をバイトコンパイル時に文字列化
+
+	* - json-encode の高速化
+	  - yahoo.co.jp のハテブ json のエンコード: 3s => 2s
+
+	* - json-encode を実装。
+	  - ユーティリティをいろいろ追加。
 
 2008-02-23  MIYAMUKO Katsuyuki
 

@@ -63,6 +63,27 @@
          r))))
 
 
+
+(defmacro puts (fmt &rest args)
+  `(format t ,fmt ,@args))
+
+(defmacro write-each (map-fn fn object &optional prefix suffix infix)
+  `(let ((first t))
+     ,(when prefix
+        `(puts ,(format nil "~A" prefix)))
+     (,map-fn
+             #'(lambda (&rest args)
+                 (if first
+                     (setf first nil)
+                   ,(when infix
+                      `(puts ,(format nil "~A" infix))))
+                 (apply ,fn args))
+      ,object)
+     ,(when suffix
+        `(puts ,(format nil "~A" suffix)))
+    ))
+
+
 (provide "json/macros")
 
 ;;;; End

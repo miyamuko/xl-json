@@ -16,6 +16,40 @@
 
 (in-package :json)
 
+(defparameter *json-lisp-escaped-chars*
+  `(("\\\"" . "\"")
+    ("\\\\" . "\\")
+    ("\\/" . "/")
+    ("\\b" . "\b")
+    ("\\f" . "\f")
+    ("\\n" . "\n")
+    ("\\r" . "\r")
+    ("\\t" . "\t")))
+
+(defmacro json-char->lisp-char (json-char)
+  `(cdr (assoc ,json-char *json-lisp-escaped-chars*
+               :test #'string=)))
+
+(defmacro lisp-char->json-char (lisp-char)
+  `(car (rassoc ,lisp-char *json-lisp-escaped-chars*
+                :test #'string=)))
+
+(defmacro encode-unicode-char (code)
+  `(format nil "\\u~4,'0x" ,code))
+
+(defun maybe-alistp (list)
+  (some #'consp list))
+
+(defun mapseq (function sequence &rest more-sequences)
+  (apply 'map `(nil ,function ,sequence ,@more-sequences)))
+
+
+(defun re-union (&rest re-list)
+  (format nil "~{\\(~A\\)~^\\|~}" re-list))
+
+
+
+
 (defun D0(&rest args)
   (msgbox "~S~%line=~D, col=~D, point=~D~%[~A~A]"
           args
@@ -24,9 +58,6 @@
           (char-after (point))
           )
   (car (last args)))
-
-(defun re-union (&rest re-list)
-  (format nil "~{\\(~A\\)~^\\|~}" re-list))
 
 
 (provide "json/utils")

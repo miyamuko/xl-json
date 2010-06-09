@@ -98,15 +98,6 @@
            word))))
 
 
-(defparameter *json-lisp-escaped-chars*
-  `(("\\\"" . "\"")
-    ("\\\\" . "\\")
-    ("\\/" . "/")
-    ("\\b" . "\b")
-    ("\\f" . "\f")
-    ("\\n" . "\n")
-    ("\\r" . "\r")
-    ("\\t" . "\t")))
 (defparameter *unicode-char* "\\\\u[a-fA-F0-9]\\{4\\}")
 (defparameter *escaped-char* "\\\\.")
 (defparameter *re-double-quote-string*
@@ -142,11 +133,11 @@
 
 (defmacro scan-json-string (options)
   `(cond ((skip-char-if #\")
-         (scan-json-double-quote-string ,options))
-        ((skip-char-if #\')
-         (scan-json-single-quote-string ,options))
-        (t
-         (scan-json-bare-value ,options))))
+          (scan-json-double-quote-string ,options))
+         ((skip-char-if #\')
+          (scan-json-single-quote-string ,options))
+         (t
+          (scan-json-bare-value ,options))))
 
 
 (defun parse-json-number (value)
