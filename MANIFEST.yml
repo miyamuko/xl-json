@@ -22,5 +22,4 @@ files:
     - site-lisp/json/docs/**/*.*
     - site-lisp/json/src/**/*.*
   exclude:
-    - site-lisp/json-scratch.l
     - site-lisp/json/tests/*.*
