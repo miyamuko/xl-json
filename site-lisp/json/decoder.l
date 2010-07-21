@@ -4,7 +4,7 @@
 ;;;;
 ;;;; License:
 ;;;;
-;;;;   Copyright (c) 2008 MIYAMUKO Katsuyuki.
+;;;;   Copyright (c) 2008,2010 MIYAMUKO Katsuyuki.
 ;;;;
 ;;;;   json is released under an MIT license.
 ;;;;   See json/docs/MIT-LICENSE for full license.
@@ -21,7 +21,7 @@
           json-decode-file
           ))
 
-(defvar *json-tmp-buffer-name* " *json:tmp~A*")
+(defparameter *json-decode-buffer-name* " *json:decode*")
 
 (defmacro skip-ws ()
   `(skip-chars-forward " \t\r\f\n"))
@@ -223,15 +223,15 @@
 (defun json-decode (json-text &rest options)
   (check-type json-text string)
   (let ((options (parse-options options)))
-    (with-temporary-buffer ((format nil *json-tmp-buffer-name* (gensym)))
+    (with-temporary-buffer (*json-decode-buffer-name*)
       (insert json-text)
       (scan-json-toplevel options))))
 
 (defun json-decode-file (filename &rest options)
   (check-type filename string)
   (let ((options (parse-options options)))
-    (with-temporary-buffer ((format nil *json-tmp-buffer-name* (gensym)))
-      (read-file filename)
+    (with-temporary-buffer (*json-decode-buffer-name*)
+      (read-file filename nil t)
       (scan-json-toplevel options))))
 
 

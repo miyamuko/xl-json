@@ -1,3 +1,15 @@
+2010-07-21  MIYAMUKO Katsuyuki
+
+	* (with-temporary-buffer, json-decode, json-decode-file):
+	  json 解析用のバッファを毎回削除しないようにした。 [Issue #2]
+
+	* json 解析用バッファ名を " *json:tmp<gensym>*" から " *json:decode*" に変更
+
+	* Rename *json-tmp-buffer-name* to *json-decode-buffer-name*
+
+	* (json-decode-file): 「～行読み込みました」というメッセージを
+	  表示しないようにした。 [Issue #1]
+
 2008-07-20  MIYAMUKO Katsuyuki
 
 	* (write-each, puts): macros.l に移動
