@@ -4,7 +4,7 @@
 ;;;;
 ;;;; License:
 ;;;;
-;;;;   Copyright (c) 2008 MIYAMUKO Katsuyuki.
+;;;;   Copyright (c) 2008,2010 MIYAMUKO Katsuyuki.
 ;;;;
 ;;;;   json is released under an MIT license.
 ;;;;   See json/docs/MIT-LICENSE for full license.
@@ -43,7 +43,7 @@
                (erase-buffer ,tmp)
                ,@body)
            (unless (deleted-buffer-p ,tmp)
-             (delete-buffer ,tmp)))))))
+             (erase-buffer ,tmp)))))))
 (setf (get 'with-temporary-buffer 'ed:lisp-indent-hook) 'with-set-buffer)
 
 
