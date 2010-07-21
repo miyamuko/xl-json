@@ -4,7 +4,7 @@
 ;;;;
 ;;;; License:
 ;;;;
-;;;;   Copyright (c) 2008 MIYAMUKO Katsuyuki.
+;;;;   Copyright (c) 2008,2010 MIYAMUKO Katsuyuki.
 ;;;;
 ;;;;   json is released under an MIT license.
 ;;;;   See json/docs/MIT-LICENSE for full license.
@@ -48,16 +48,17 @@
          (plain-error "TODO"))))
 
 
-(defparameter *re* (compile-regexp
-                    (re-union "[/\b\t\n\r\t\"\\]"               ; special
-                              "[\x20-\x7F]+"                    ; ascii
-                              "[\Xd600-\Xd6ff][\Xd700-\Xd7ff]"  ; undef
-                              "."                               ; other
-                              )))
+(defparameter *json-char-kind*
+  (compile-regexp
+   (re-union "[/\b\t\n\r\t\"\\]"               ; special char
+             "[\x20-\x7F]+"                    ; ascii char
+             "[\Xd600-\Xd6ff][\Xd700-\Xd7ff]"  ; undef unicode char
+             "."                               ; other char
+             )))
 (defun json-write-string (object options)
   (puts "\"")
   (let ((start 0))
-    (while (string-match *re* object start)
+    (while (string-match *json-char-kind* object start)
       (setf start (match-end 0))
       (multiple-value-bind (special ascii undef other)
           (values-list (mapcar 'match-string '(1 2 3 4)))
