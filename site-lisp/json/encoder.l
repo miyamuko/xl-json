@@ -19,15 +19,45 @@
 (in-package :json)
 
 (export '(json-encode
+          json-encode-to-buffer
+          json-encode-to-stream
           ))
 
 
 (defun json-encode (json-object &rest options)
+  (with-output-to-string (out)
+    (apply 'json-encode-to-stream out json-object options)))
+
+(defun json-encode-to-buffer (buffer-or-name json-object &rest options)
+  (check-type buffer-or-name (or buffer string))
+  (let ((buffer (if (bufferp buffer-or-name)
+                    buffer-or-name
+                  (get-buffer-create buffer-or-name))))
+    (with-open-stream (out (make-buffer-stream buffer))
+      (apply 'json-encode-to-stream out json-object options))))
+
+(defun json-encode-to-stream (stream json-object &rest options)
   (let ((options (parse-options options)))
-    (with-output-to-string (out)
-      (let ((*standard-output* out))
-        (json-write-value json-object options)
-        ))))
+    (let ((*standard-output* stream))
+      (json-write-toplevel json-object options)
+      )))
+
+
+(defun json-write-toplevel (object options)
+  (when (and (option-strict options)
+             (not (or (json-object-p object)
+                      (json-array-p object))))
+    (raise-json-argument-error "~S (~A) not allowed (only arrays or objects). Try :strict nil option."
+                               object (type-of object)))
+  (if (option-padding options)
+      (json-write-value-with-padding object options)
+    (json-write-value object options)))
+
+(defun json-write-value-with-padding (object options)
+  (puts (option-padding options))
+  (puts "(")
+  (json-write-value object options)
+  (puts ")"))
 
 (defun json-write-value (object options)
   (cond ((stringp object)
@@ -36,7 +66,7 @@
          (json-write-string (symbol-name object) options))
         ((numberp object)
          (json-write-number object options))
-        ((arrayp object)
+        ((simple-vector-p object)
          (json-write-array object options))
         ((hash-table-p object)
          (json-write-hash-table object options))
@@ -45,7 +75,7 @@
         ((listp object)
          (json-write-list object options))
         (t
-         (plain-error "TODO"))))
+         (raise-json-argument-error "~S (~A) not supported" object (type-of object)))))
 
 
 (defparameter *json-char-kind*

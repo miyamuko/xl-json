@@ -37,8 +37,17 @@
 (defmacro encode-unicode-char (code)
   `(format nil "\\u~4,'0x" ,code))
 
+(defun json-array-p (value)
+  (or (simple-vector-p value)
+      (listp value)))
+
+(defun json-object-p (value)
+  (or (hash-table-p value)
+      (maybe-alistp value)))
+
 (defun maybe-alistp (list)
-  (some #'consp list))
+  (and (listp list)
+       (some #'consp list)))
 
 (defun mapseq (function sequence &rest more-sequences)
   (apply 'map `(nil ,function ,sequence ,@more-sequences)))

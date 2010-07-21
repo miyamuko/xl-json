@@ -43,6 +43,7 @@
      )))
 
 (define-keyword-option :strict t)
+(define-keyword-option :padding nil)
 
 (define-keyword-option :json-null nil)
 (define-keyword-option :json-true t)
