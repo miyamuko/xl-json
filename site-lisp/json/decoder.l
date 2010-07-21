@@ -4,7 +4,7 @@
 ;;;;
 ;;;; License:
 ;;;;
-;;;;   Copyright (c) 2008 MIYAMUKO Katsuyuki.
+;;;;   Copyright (c) 2008,2010 MIYAMUKO Katsuyuki.
 ;;;;
 ;;;;   json is released under an MIT license.
 ;;;;   See json/docs/MIT-LICENSE for full license.
@@ -240,7 +240,7 @@
   (check-type filename string)
   (let ((options (parse-options options)))
     (with-temporary-buffer ((format nil *json-tmp-buffer-name* (gensym)))
-      (read-file filename)
+      (read-file filename nil t)
       (scan-json-toplevel options))))
 
 

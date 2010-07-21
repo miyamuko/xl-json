@@ -1,3 +1,8 @@
+2010-07-21  MIYAMUKO Katsuyuki
+
+	* (json-decode-file): 「～行読み込みました」というメッセージを
+	  表示しないようにした。 [Issue #1]
+
 2008-07-12  MIYAMUKO Katsuyuki
 
 	* json 0.1.2 リリース!
