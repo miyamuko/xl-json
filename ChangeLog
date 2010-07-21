@@ -1,73 +1,73 @@
 2008-07-12  MIYAMUKO Katsuyuki
 
-	* json 0.1.2 ƒŠƒŠ[ƒX!
+	* json 0.1.2 ãƒªãƒªãƒ¼ã‚¹!
 
-	* ƒ‰ƒCƒZƒ“ƒXƒtƒ@ƒCƒ‹‚ğ“¯«
+	* ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’åŒæ¢±
 
 2008-02-23  MIYAMUKO Katsuyuki
 
-	* json 0.1.1 ƒŠƒŠ[ƒX!
+	* json 0.1.1 ãƒªãƒªãƒ¼ã‚¹!
 
-	* json-load ‚ğ json-decode ‚É‚µ‚½B
+	* json-load ã‚’ json-decode ã«ã—ãŸã€‚
 
 2008-02-17  MIYAMUKO Katsuyuki
 
-	* json 0.1.0 ƒŠƒŠ[ƒX!
+	* json 0.1.0 ãƒªãƒªãƒ¼ã‚¹!
 
-	* (scan-json-toplevel): ‹ó”’‚à–³‹
-	  (delete-json-padding): JSONP ‚ÌŠÖ”–¼‚ğ‚©‚È‚è_“î‚Éw’è‚µ‚Äíœ
+	* (scan-json-toplevel): ç©ºç™½ã‚‚ç„¡è¦–
+	  (delete-json-padding): JSONP ã®é–¢æ•°åã‚’ã‹ãªã‚ŠæŸ”è»Ÿã«æŒ‡å®šã—ã¦å‰Šé™¤
 
-	* - ”’l‚Ì‰ğÍ‚É¸”s‚µ‚½ê‡‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ğ‰ü‘P
-	  - strict ‚ª t ‚Ì‚Æ‚«‚É toplevel ‚Ì•¶š—ñ‚ğó‚¯•t‚¯‚Ä‚¢‚½‚Ì‚ğC³
-	  - strict ‚ª nil ‚Ì‚Æ‚«‚Í JSON padding ‚¾‚¯‚ğÁ‹‚·‚éB
+	* - æ•°å€¤ã®è§£æã«å¤±æ•—ã—ãŸå ´åˆã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ”¹å–„
+	  - strict ãŒ t ã®ã¨ãã« toplevel ã®æ–‡å­—åˆ—ã‚’å—ã‘ä»˜ã‘ã¦ã„ãŸã®ã‚’ä¿®æ­£
+	  - strict ãŒ nil ã®ã¨ãã¯ JSON padding ã ã‘ã‚’æ¶ˆå»ã™ã‚‹ã€‚
 
 	* (skip-bare-word): fix indent
 
-	* ƒ}ƒNƒ‰»
-	  ƒ^ƒCƒ|C³
+	* ãƒã‚¯ãƒ­åŒ–
+	  ã‚¿ã‚¤ãƒä¿®æ­£
 
-	* ‚Å‚«‚éŒÀ‚èƒ}ƒNƒ‰»‚µ‚Ä‚‘¬‰»B
+	* ã§ãã‚‹é™ã‚Šãƒã‚¯ãƒ­åŒ–ã—ã¦é«˜é€ŸåŒ–ã€‚
 
-	* (skip-bare-word): ‹ó”’•¶š‚ğŠÜ‚ñ‚¾ bare word ‚É‘Î‰B
+	* (skip-bare-word): ç©ºç™½æ–‡å­—ã‚’å«ã‚“ã  bare word ã«å¯¾å¿œã€‚
 
-	* (json-load-file): filename ‚Ì check ‚ğ’Ç‰Á
+	* (json-load-file): filename ã® check ã‚’è¿½åŠ 
 
 	* add json-load-file test
 
-	* tests ‚ÉˆÚ“®B
+	* tests ã«ç§»å‹•ã€‚
 
 	* bumped version number to 0.1.0
 
-	* ƒGƒ‰[ƒƒbƒZ[ƒW‚ÌÅŒã‚ÉƒsƒŠƒIƒh‚ğ‚Â‚¯‚½
+	* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æœ€å¾Œã«ãƒ”ãƒªã‚ªãƒ‰ã‚’ã¤ã‘ãŸ
 
-	* (raise-end-of-json-error): •¶š—ñ‚È‚çƒNƒH[ƒg‚µ‚È‚¢B
+	* (raise-end-of-json-error): æ–‡å­—åˆ—ãªã‚‰ã‚¯ã‚©ãƒ¼ãƒˆã—ãªã„ã€‚
 
 	* :hashtable => :hash-table
 
-	* (scan-json-object): hash-table-test ‚ğİ’è
+	* (scan-json-object): hash-table-test ã‚’è¨­å®š
 
-	* (json-load "") ‚Å #\NUL ‚ªƒGƒ‰[ƒƒbƒZ[ƒW‚ÉŠÜ‚Ü‚ê‚È‚¢‚æ‚¤‚É‚µ‚½B
+	* (json-load "") ã§ #\NUL ãŒã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«å«ã¾ã‚Œãªã„ã‚ˆã†ã«ã—ãŸã€‚
 
-	* (with-temporary-buffer): contents ‚ğæ‚ç‚È‚¢‚æ‚¤‚É‚µ‚½B
+	* (with-temporary-buffer): contents ã‚’å–ã‚‰ãªã„ã‚ˆã†ã«ã—ãŸã€‚
 
-	* (scan-json-object): ‚»‚Ì‚Ü‚Ü•Ô‚·ê‡‚Í identiry ‚ğg‚¦‚Î‚æ‚¢B
+	* (scan-json-object): ãã®ã¾ã¾è¿”ã™å ´åˆã¯ identiry ã‚’ä½¿ãˆã°ã‚ˆã„ã€‚
 
-	* (json-load-file): ƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚Å‚«‚é‚æ‚¤‚É‚µ‚½B
+	* (json-load-file): ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã§ãã‚‹ã‚ˆã†ã«ã—ãŸã€‚
 
-	* (json-load): ˆø”–¼‚ğ•ÏX
+	* (json-load): å¼•æ•°åã‚’å¤‰æ›´
 
-	* (skip-bare-word): ƒ}ƒNƒ‰»
-	  (skip-to-object/array): ƒIƒuƒWƒFƒNƒg‚ÌŠJn‚Ü‚Å‚²‚İ‚ğƒXƒLƒbƒv
+	* (skip-bare-word): ãƒã‚¯ãƒ­åŒ–
+	  (skip-to-object/array): ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é–‹å§‹ã¾ã§ã”ã¿ã‚’ã‚¹ã‚­ãƒƒãƒ—
 
-	* —áŠO–¼‚ğ export
+	* ä¾‹å¤–åã‚’ export
 
-	* (json-load): strict ‚ª nil ‚È‚çÅ‰‚Ì‹ó”’‚ğ“Ç‚İ”ò‚Î‚·B
+	* (json-load): strict ãŒ nil ãªã‚‰æœ€åˆã®ç©ºç™½ã‚’èª­ã¿é£›ã°ã™ã€‚
 
-	* loader.l ‚ª‚¾‚¢‚½‚¢‚Å‚«‚½B
+	* loader.l ãŒã ã„ãŸã„ã§ããŸã€‚
 
 2008-02-16  MIYAMUKO Katsuyuki
 
-	* ‚Æ‚è‚ ‚¦‚¸ƒRƒ~ƒbƒgB
+	* ã¨ã‚Šã‚ãˆãšã‚³ãƒŸãƒƒãƒˆã€‚
 
 	* main.l => loader.l
 
@@ -75,4 +75,4 @@
 
 	* no need to ni-autoload.
 
-	* json ì¬ŠJn
+	* json ä½œæˆé–‹å§‹

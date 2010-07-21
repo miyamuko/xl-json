@@ -1,6 +1,6 @@
-= json - ���S�ō����� JSON �p�[�T
+= json - 安全で高速な JSON パーサ
 
-  * Author: �݂�ނ� ���䂫 ((<URL:mailto:miyamuko@gmail.com>))
+  * Author: みやむこ かつゆき ((<URL:mailto:miyamuko@gmail.com>))
   * Home URL: ((<URL:http://miyamuko.s56.xrea.com/xyzzy/json/intro.htm>))
   * Version: 0.1.2
 
@@ -14,7 +14,7 @@
    "{\"title\":\"\\u306f\\u3066\\u306a\\u30b9\\u30bf\\u30fc\\u65e5\\u8a18\",
      \"uri\":\"http://d.hatena.ne.jp/hatenastar/\",
      \"star_count\":\"75630\"}")
-  ;;=> (("title" . "�͂ĂȃX�^�[���L")
+  ;;=> (("title" . "はてなスター日記")
   ;;    ("uri" . "http://d.hatena.ne.jp/hatenastar/")
   ;;    ("star_count" . "75630"))
 
@@ -28,22 +28,22 @@
   ;;     ("favicon" . "http://faviapi.sidetools.com/?url=http%3A%2F%2Fcss-happylife.com%2F&c=4c8a5890")
   ;;     ("navigation" . "http://awasete.com/bar.phtml?u=http%3A%2F%2Fcss-happylife.com%2F&p=http%3A%2F%2Fblog.myrss.jp%2F")
   ;;     ("more" . "http://awasete.com/show.phtml?u=http%3A%2F%2Fcss-happylife.com%2F"))
-  ;;    (("title" . "���`�x�[�V�����͊y�����n������")
+  ;;    (("title" . "モチベーションは楽しさ創造から")
   ;;     ("url" . "http://d.hatena.ne.jp/favre21/")
   ;;     ("favicon" . "http://faviapi.sidetools.com/?url=http%3A%2F%2Fd.hatena.ne.jp%2Ffavre21%2F&c=e1c17aea")
   ;;     ("navigation" . "http://awasete.com/bar.phtml?u=http%3A%2F%2Fd.hatena.ne.jp%2Ffavre21%2F&p=http%3A%2F%2Fblog.myrss.jp%2F")
   ;;     ("more" . "http://awasete.com/show.phtml?u=http%3A%2F%2Fd.hatena.ne.jp%2Ffavre21%2F"))
-  ;;    ;; �ȗ�
+  ;;    ;; 省略
   ;;    )
 
 
 == DESCRIPTION
 
-json �� xyzzy Lisp �݂̂Ŏ������� JSON �p�[�T�ł��B
-json-syck ��荂���ł��O�����C�u�����𗘗p���Ă��Ȃ��̂ň��S�i�N���b�V�����邱�Ƃ��Ȃ��j�ł��B
+json は xyzzy Lisp のみで実装した JSON パーサです。
+json-syck より高速でかつ外部ライブラリを利用していないので安全（クラッシュすることがない）です。
 
-json �̓��C�u�����ł��B
-�A�v���P�[�V�����͈ȉ��̃R�[�h��ǉ����邱�Ƃ� json �𗘗p���邱�Ƃ��ł��܂��B
+json はライブラリです。
+アプリケーションは以下のコードを追加することで json を利用することができます。
 
   (in-package :you-awesome-app)
   (require "json")
@@ -54,77 +54,77 @@ json �̓��C�u�����ł��B
 
 == INSTALL
 
-=== NetInstaller �ŃC���X�g�[��
+=== NetInstaller でインストール
 
 (1) ((<NetInstaller|URL:http://www7a.biglobe.ne.jp/~hat/xyzzy/ni.html>))
-    �� json ���C���X�g�[�����܂��B
+    で json をインストールします。
 
-=== NetInstaller ���g�킸�ɃC���X�g�[��
+=== NetInstaller を使わずにインストール
 
-(1) �A�[�J�C�u���_�E�����[�h���܂��B
+(1) アーカイブをダウンロードします。
 
     ((<URL:http://miyamuko.s56.xrea.com/xyzzy/archives/json.zip>))
 
-(2) �A�[�J�C�u��W�J���āA$XYZZY/site-lisp �z���Ƀt�@�C�����R�s�[���܂��B
+(2) アーカイブを展開して、$XYZZY/site-lisp 配下にファイルをコピーします。
 
 
 == MODULE
 
 === DEPENDS
 
-�ˑ����C�u�����͂���܂���B
+依存ライブラリはありません。
 
 
 === PACKAGE
 
-json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
+json は以下のパッケージを利用しています。
 
   * json
 
 
 === VARIABLE
 
-�Ȃ��B
+なし。
 
 
 === CONSTANT
 
-�Ȃ��B
+なし。
 
 
 === CODITION
 
 --- json:json-simple-error
 
-    json-parse-error, json-argument-error �̐e�R���f�B�V�����ł��B
+    json-parse-error, json-argument-error の親コンディションです。
 
-    ���̃R���f�B�V�������̂��ʒm����邱�Ƃ͂���܂���B
+    このコンディション自体が通知されることはありません。
 
 --- json:json-parse-error
 
-    �s���� json text ���w�肵���ꍇ�ɒʒm������O�ł��B
+    不正な json text を指定した場合に通知される例外です。
 
 --- json:json-argument-error
 
-    json-decode �ɕs���Ȉ������w�肵���ꍇ�ɒʒm������O�ł��B
+    json-decode に不正な引数を指定した場合に通知される例外です。
 
 
 === COMMAND
 
-�Ȃ��B
+なし。
 
 === FUNCTION
 
 --- json:json-decode JSON-TEXT &REST OPTIONS
 
-    JSON �e�L�X�g��ǂݍ��� S ���ɕϊ����܂��B
+    JSON テキストを読み込み S 式に変換します。
 
-    * JSON-TEXT �ɂ� JSON �𕶎���Ŏw�肵�܂��B
-    * ������ȊO���w�肵���ꍇ�� type-error ��O��ʒm���܂�
-    * ���� OPTIONS �̓p�[�T�I�v�V�������w�肵�܂��B
-      �p�[�T�I�v�V������ �L�[���[�h���X�g�Ŏw�肵�܂��B
+    * JSON-TEXT には JSON を文字列で指定します。
+    * 文字列以外を指定した場合は type-error 例外を通知します
+    * 引数 OPTIONS はパーサオプションを指定します。
+      パーサオプションは キーワードリストで指定します。
 
-    �ȉ��̃I�v�V�������w��\�ł��B
+    以下のオプションを指定可能です。
 
     * ((< strict >))
     * ((< json-null >))
@@ -135,31 +135,31 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
     * ((< hash-table-test >))
 
     : strict
-        ������ JSON ���p�[�X���邩�ǂ����w�肵�܂��B
+        厳密に JSON をパースするかどうか指定します。
 
-        * strict �� non-nil �Ȃ� RFC �ɏ������Č����Ƀp�[�X���܂��B
-        * strict �� nil �Ȃ�ȉ��̂悤�� RFC �ɏ������Ă��Ȃ� JSON ���󂯕t���܂��B
-          * �N�H�[�g����Ă��Ȃ�������
+        * strict が non-nil なら RFC に準拠して厳密にパースします。
+        * strict が nil なら以下のような RFC に準拠していない JSON も受け付けます。
+          * クォートされていない文字列
               (json-decode "{lang:lisp}" :strict t)
               ;;=> json parse error: bare word not allowed.
               (json-decode "{lang:lisp}" :strict nil)
               ;;=> (("lang" . "lisp"))
-          * �V���O���N�H�[�g�ň͂܂ꂽ������
+          * シングルクォートで囲まれた文字列
               (json-decode "{'lang':'lisp'}" :strict t)
               ;;=> json parse error: single quoted string not allowed.
               (json-decode "{'lang':'lisp'}" :strict nil)
               ;;=> (("lang" . "lisp"))
-          * Objects, Arrays �̍Ō�ɗ]�v�ȃJ���}
+          * Objects, Arrays の最後に余計なカンマ
               (json-decode "{\"lang\":[\"lisp\",\"ruby\",],}" :strict t)
               ;;=> json parse error: unexpected ']', expecting json value.
               (json-decode "{\"lang\":[\"lisp\",\"ruby\",],}" :strict nil)
               ;;=> (("lang" "lisp" "ruby"))
-          * �g�b�v���x���� Objects, Arrays �̎��ӂɃS�~������
+          * トップレベルの Objects, Arrays の周辺にゴミがある
               (json-decode "JSONP({\"lang\":\"lisp\"})" :strict t)
               ;;=> json parse error: bare word not allowed.
               (json-decode "JSONP({\"lang\":\"lisp\"})" :strict nil)
               ;;=> (("lang" . "lisp"))
-          * �g�b�v���x���� Objects, Arrays �ȊO�ł��󂯕t����
+          * トップレベルが Objects, Arrays 以外でも受け付ける
               (json-decode "true" :strict t)
               ;;=> json parse error: unexpected bare word, expecting object or array.
               (json-decode "true" :strict nil)
@@ -169,40 +169,40 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
               (json-decode "\"hoge\"" :strict nil)
               ;;=> "hoge"
 
-        �f�t�H���g�� t �ł��B
+        デフォルトは t です。
 
     : json-null
-        JSON �� null �ɑΉ����� lisp �̒l���w�肵�܂��B
+        JSON の null に対応する lisp の値を指定します。
 
-        �f�t�H���g�l�� nil �ł��B
+        デフォルト値は nil です。
 
           (json-decode "{\"name\": null}" :json-null :NULL)
           ;; => (("name" . :NULL))
 
     : json-true
-        JSON �� true �ɑΉ����� lisp �̒l���w�肵�܂��B
+        JSON の true に対応する lisp の値を指定します。
 
-        �f�t�H���g�l�� t �ł��B
+        デフォルト値は t です。
 
           (json-decode "{\"xyzzy\": true}" :json-true :TRUE)
           ;; => (("xyzzy" . :TRUE))
 
     : json-false
-        JSON �� false �ɑΉ����� lisp �̒l���w�肵�܂��B
+        JSON の false に対応する lisp の値を指定します。
 
-        �f�t�H���g�l�� nil �ł��B
+        デフォルト値は nil です。
 
           (json-decode "{\"xyzzy\": false}" :json-false :FALSE)
           ;; => (("xyzzy" . :FALSE))
 
     : json-array
-        JSON �� Arrays �̃}�b�s���O���@���w�肵�܂��B
+        JSON の Arrays のマッピング方法を指定します。
 
-        * ������ :list �܂��� :array ���w�肵�܂��B
-        * :list ���w�肵���ꍇ�̓��X�g�Ƀ}�b�s���O���܂��B
-        * :array ���w�肵���ꍇ�͔z��Ƀ}�b�s���O���܂��B
+        * 引数は :list または :array を指定します。
+        * :list を指定した場合はリストにマッピングします。
+        * :array を指定した場合は配列にマッピングします。
 
-        �f�t�H���g�l�� :list �ł��B
+        デフォルト値は :list です。
 
           (json-decode "[1, 2, 3]" :json-array :list)
           ;; => (1 2 3)
@@ -211,13 +211,13 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
           ;; => #(1 2 3)
 
     : json-object
-        JSON �� Objects �̃}�b�s���O���@���w�肵�܂��B
+        JSON の Objects のマッピング方法を指定します。
 
-        * ������ :alist �܂��� :hash-table ���w�肵�܂��B
-        * :alist ���w�肵���ꍇ�͊֘A���X�g�Ƀ}�b�s���O���܂��B
-        * :hash-table ���w�肵���ꍇ�� hashtable �Ƀ}�b�s���O���܂��B
+        * 引数は :alist または :hash-table を指定します。
+        * :alist を指定した場合は関連リストにマッピングします。
+        * :hash-table を指定した場合は hashtable にマッピングします。
 
-        �f�t�H���g�l�� :alist �ł��B
+        デフォルト値は :alist です。
 
           (json-decode "{\"xyzzy\": \"common lisp\", \"emacs\": \"emacs lisp\"}" :json-object :alist)
           ;; => (("xyzzy" . "common lisp") ("emacs" . "emacs lisp"))
@@ -231,15 +231,15 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
           ;; => "emacs lisp"
           ;;    t
 
-        ((<hash-table-test>)) ���Q�Ƃ��Ă��������B
+        ((<hash-table-test>)) も参照してください。
 
     : hash-table-test
-        hash-table �̃e�X�g�֐����w�肵�܂��B
+        hash-table のテスト関数を指定します。
 
-        * ((<json-object>)) �� :hash-table ���w�肵���Ƃ��̂ݗL���ȃI�v�V�����ł��B
-        * �w��\�Ȋ֐��� eq, eql, equal, equalp �ł��B
+        * ((<json-object>)) に :hash-table を指定したときのみ有効なオプションです。
+        * 指定可能な関数は eq, eql, equal, equalp です。
 
-        �f�t�H���g�� equal �ł��B
+        デフォルトは equal です。
 
           (setf h (json-decode "{\"name\": \"hogehoge\"}" :json-object :hash-table))
           ;; => #<hashtable 52893564>
@@ -265,32 +265,32 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
 
 --- json:json-decode-file FILENAME &REST OPTIONS
 
-    �w�肳�ꂽ�t�@�C������ JSON �����[�h���܂��B
+    指定されたファイルから JSON をロードします。
 
-    OPTIONS �̎w����@��
+    OPTIONS の指定方法は
     ((<json-decode|json:json-decode JSON-TEXT &REST OPTIONS>))
-    ���Q�Ƃ��Ă��������B
+    を参照してください。
 
 --- json:json-version
 
-    �{���C�u�����̃o�[�W������Ԃ��܂��B
-    �o�[�W������ major.minor.teeny �Ƃ����`���ł��B
+    本ライブラリのバージョンを返します。
+    バージョンは major.minor.teeny という形式です。
 
-    ���ꂼ��̔ԍ��͕K�� 1 ���ɂ���̂ŁA�ȉ��̂悤�ɔ�r���邱�Ƃ��ł��܂��B
+    それぞれの番号は必ず 1 桁にするので、以下のように比較することができます。
 
         (if (string<= "1.1.0" (json:json-version))
-            '(1.1.0 �ȍ~�ŗL���ȏ���)
-          '(1.1.0 ���O�̃o�[�W�����ł̏���))
+            '(1.1.0 以降で有効な処理)
+          '(1.1.0 より前のバージョンでの処理))
 
 === MACRO
 
-�Ȃ��B
+なし。
 
 
 == TODO
 
-* �G���[���b�Z�[�W�ɍs���E�J��������\��
-* strict ���ׂ����w��
+* エラーメッセージに行数・カラム数を表示
+* strict を細かく指定
   * single-quote-allowed
   * bare-word-allowed
   * extra-comma-allowed
@@ -298,25 +298,25 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
 * emitter
 * json path
 * json-decode-from-stream
-* ����ɍ�����
+* さらに高速化
 
 
 == KNOWN BUGS
 
-* ����Ȑ��l�͈����܂���B
+* 巨大な数値は扱えません。
 
     (json:json-decode "[23456789012E666]")
-    ;;=> json parse error: invalid number: "23456789012E666" (�I�[�o�[�t���[���܂���)
+    ;;=> json parse error: invalid number: "23456789012E666" (オーバーフローしました)
 
 
 == AUTHOR
 
-�݂�ނ� ���䂫 (((<URL:mailto:miyamuko@gmail.com>)))
+みやむこ かつゆき (((<URL:mailto:miyamuko@gmail.com>)))
 
 
 == SEE ALSO
 
-  : JSON �̏Љ�
+  : JSON の紹介
       ((<URL:http://www.json.org/json-ja.html>))
 
   : RFC 4627 The application/json Media Type for JavaScript Object Notation (JSON)
@@ -331,7 +331,7 @@ json �͈ȉ��̃p�b�P�[�W�𗘗p���Ă��܂��B
 
 == COPYRIGHT
 
-json �� MIT/X ���C�Z���X�Ɋ�Â��ė��p�\�ł��B
+json は MIT/X ライセンスに基づいて利用可能です。
 
 See json/docs/MIT-LICENSE for full license.
 
