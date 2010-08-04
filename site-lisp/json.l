@@ -15,6 +15,7 @@
 (require "json/version")
 (require "json/encoder")
 (require "json/decoder")
+(require "json/values")
 
 
 (provide "json")

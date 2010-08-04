@@ -1,5 +1,17 @@
 2010-08-04  MIYAMUKO Katsuyuki
 
+	* (json-values): 指定したキーの json データを取得する。
+	---
+	(let ((json (json:json-decode (xhr:xhr-get "http://b.hatena.ne.jp/entry/json/http://common-lisp.net/project/cl-json/"
+	                                           :key 'xhr:xhr-response-text))))
+	  (multiple-value-bind (count title comments)
+	      (json:json-values json '(("count" parse-integer)
+	                               "title"
+	                               ("bookmarks" "comment")))
+	    (list count title comments)))
+	---
+	;; => (3 "CL-JSON" ("lispのリスト構造をJSONで表現" "json common lisp" " Common Lisp で書かれた JSON パーサ"))
+
 	* (alistp): alist かどうかのチェックをちゃんとするようにした。
 	関数名を maybe-alistp から alistp に変更。
 
