@@ -70,7 +70,7 @@
          (json-write-array object options))
         ((hash-table-p object)
          (json-write-hash-table object options))
-        ((maybe-alistp object)
+        ((alistp object)
          (json-write-alist object options))
         ((listp object)
          (json-write-list object options))

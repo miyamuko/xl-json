@@ -1,3 +1,8 @@
+2010-08-04  MIYAMUKO Katsuyuki
+
+	* (alistp): alist かどうかのチェックをちゃんとするようにした。
+	関数名を maybe-alistp から alistp に変更。
+
 2010-07-21  MIYAMUKO Katsuyuki
 
 	* (with-temporary-buffer, json-decode, json-decode-file):

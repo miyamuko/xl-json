@@ -43,11 +43,14 @@
 
 (defun json-object-p (value)
   (or (hash-table-p value)
-      (maybe-alistp value)))
+      (alistp value)))
 
-(defun maybe-alistp (list)
+(defun alistp (list)
   (and (listp list)
-       (some #'consp list)))
+       (every #'(lambda (e)
+                  (and (consp e)
+                       (atom (car e))))
+              list)))
 
 (defun mapseq (function sequence &rest more-sequences)
   (apply 'map `(nil ,function ,sequence ,@more-sequences)))
