@@ -1,5 +1,13 @@
 2010-08-06  MIYAMUKO Katsuyuki
 
+	* (json-object-keys): 指定した json オブジェクトのキーを取得する。
+	json オブジェクトじゃない場合は type-error。
+	---
+	(let ((json (json:json-decode (xhr:xhr-get "http://b.hatena.ne.jp/entry/json/http://common-lisp.net/project/cl-json/"
+	                                           :key 'xhr:xhr-response-text))))
+	  (json:json-object-keys json))
+	;;=> ("related" "count" "url" "bookmarks" "title" "eid" "entry_url" "screenshot")
+
 	* (json-value): 指定したキーの json データを取得する。
 	json-values は複数のキーを指定して多値で取得する関数だが
 	json-value はひとつのキーを指定してひとつの値を取得する関数。

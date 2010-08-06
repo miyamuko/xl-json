@@ -1,6 +1,6 @@
 ; -*- mode: lisp; package: json -*-
 
-;;; json/values.l
+;;; json/accessor.l
 ;;
 ;; Copyright (c) 2010 MIYAMUKO Katsuyuki.
 ;;
@@ -31,9 +31,21 @@
 
 (in-package :json)
 
-(export '(json-values
+(export '(json-object-keys
+          json-values
           json-value
           ))
+
+(defun json-object-keys (json)
+  (cond ((hash-table-p json)
+         (loop for k being the hash-keys in json
+           collect k))
+        ((alistp json)
+         (mapcar #'car json))
+        (t
+         (error 'type-error
+                :datum (format nil "Not JSON object: ~S" json)
+                :expected-type '(or hashtable alist)))))
 
 #| Example
 (in-package :json)
@@ -54,7 +66,7 @@
 (defun json-value (json keys &key (test 'equal))
   (when (atom keys)
     (setf keys (list keys)))
-  ;; ã‚­ãƒ¼ã®ãƒã‚§ãƒƒã‚¯
+  ;; ƒL[‚Ìƒ`ƒFƒbƒN
   (setf keys (mapcar #'process-keys keys))
   (dolist (key keys)
     (check-type key (or keyword string integer function symbol)))
@@ -67,8 +79,8 @@
       (return-from json-value1 json))
     (let ((v (cond ((or (stringp key) (keywordp key))
                     (cond ((hash-table-p json)
-                           ;; gethash ã« test ã¯æŒ‡å®šã§ããªã„
-                           ;; æ¯”è¼ƒé–¢æ•°ã¯ json-decode ã§æŒ‡å®šã™ã‚‹ :hash-table-test ã«ä¾å­˜
+                           ;; gethash ‚É test ‚Íw’è‚Å‚«‚È‚¢
+                           ;; ”äŠrŠÖ”‚Í json-decode ‚Åw’è‚·‚é :hash-table-test ‚ÉˆË‘¶
                            (identity (gethash key json)))
                           ((alistp json)
                            (cdr (assoc key json :test test)))
@@ -93,11 +105,11 @@
       (json-value1 v subkeys test))))
 
 (defun process-keys (keys)
-  ;; quote ã®ä¸­ã§é–¢æ•°ã‚’æ›¸ã„ã¦ã—ã¾ã£ãŸå ´åˆã‚’æ•‘ã£ã¦ã‚ã’ã‚‹ã€‚
+  ;; quote ‚Ì’†‚ÅŠÖ”‚ğ‘‚¢‚Ä‚µ‚Ü‚Á‚½ê‡‚ğ‹~‚Á‚Ä‚ ‚°‚éB
   ;;   '(:key1 :key2 'parse-integer)
   ;;   '(:key1 :key2 #'parse-integer)
   ;;   '(:key1 :key2 (lambda (v) (parse-integer v)))
-  ;; æœ¬æ¥ã¯ backquote ã¨ , ã§æ›¸ãã¹ãã€‚
+  ;; –{—ˆ‚Í backquote ‚Æ , ‚Å‘‚­‚×‚«B
   (when (and (consp keys)
              (or (eq 'function (car keys))
                  (eq 'quote (car keys))
@@ -106,6 +118,6 @@
   keys)
 
 
-(provide "json/values")
+(provide "json/accessor")
 
 ;;; End
