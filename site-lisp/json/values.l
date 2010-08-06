@@ -32,6 +32,7 @@
 (in-package :json)
 
 (export '(json-values
+          json-value
           ))
 
 #| Example
@@ -46,13 +47,11 @@
 ;;=> ((2 3 4) 30 (100 200 300))
 |#
 (defun json-values (json keys-list &key (test 'equal))
-  (when (atom keys-list)
-    (setf keys-list (list keys-list)))
   (values-list (mapcar #'(lambda (keys)
                            (json-value json keys :test test))
                        keys-list)))
 
-(defun json-value (json keys &key test)
+(defun json-value (json keys &key (test 'equal))
   (when (atom keys)
     (setf keys (list keys)))
   ;; キーのチェック
