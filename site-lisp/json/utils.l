@@ -52,6 +52,12 @@
                        (atom (car e))))
               list)))
 
+(defun ensure-json-object (json)
+  (unless (json-object-p json)
+    (error 'type-error
+           :datum json
+           :expected-type "JSON object (hash-table or alist)")))
+
 (defun mapseq (function sequence &rest more-sequences)
   (apply 'map `(nil ,function ,sequence ,@more-sequences)))
 

@@ -1,3 +1,12 @@
+2010-08-07  MIYAMUKO Katsuyuki
+
+	* (json-key-p): 指定されたキーが json オブジェクトのキーなら t を返す。
+	---
+	(let ((json (json:json-decode (xhr:xhr-get "http://b.hatena.ne.jp/entry/json/http://common-lisp.net/project/cl-json/"
+	                                           :key 'xhr:xhr-response-text))))
+          (json:json-key-p json "count") ;;=> t
+          (json:json-key-p json "hoge")) ;;=> nil
+
 2010-08-06  MIYAMUKO Katsuyuki
 
 	* (json-object-keys): 指定した json オブジェクトのキーを取得する。

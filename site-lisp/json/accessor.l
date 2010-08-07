@@ -32,20 +32,30 @@
 (in-package :json)
 
 (export '(json-object-keys
+          json-key-p
           json-values
           json-value
           ))
 
 (defun json-object-keys (json)
-  (cond ((hash-table-p json)
-         (loop for k being the hash-keys in json
-           collect k))
-        ((alistp json)
-         (mapcar #'car json))
-        (t
-         (error 'type-error
-                :datum (format nil "Not JSON object: ~S" json)
-                :expected-type '(or hashtable alist)))))
+  (ensure-json-object json)
+  (case (type-of json)
+    (hash-table
+     (loop for k being the hash-keys in json
+       collect k))
+    (t ;; alist
+     (mapcar #'car json))))
+
+(defun json-key-p (json key &key (test 'equal))
+  (ensure-json-object json)
+  (case (type-of json)
+    (hash-table
+     (multiple-value-bind (v found)
+         (gethash key json)
+       found))
+    (t ;; alist
+     ;; hash-table ‚Ìê‡‚ÆŒ‹‰Ê‚ğ‡‚í‚¹‚é‚½‚ß member ‚ÌŒ‹‰Ê‚ğ‚»‚Ì‚Ü‚Ü•Ô‚³‚È‚¢
+     (not (null (member key json :test test :key #'car))))))
 
 #| Example
 (in-package :json)
