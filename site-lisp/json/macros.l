@@ -4,7 +4,7 @@
 ;;;;
 ;;;; License:
 ;;;;
-;;;;   Copyright (c) 2008,2010 MIYAMUKO Katsuyuki.
+;;;;   Copyright (c) 2008,2010-2011 MIYAMUKO Katsuyuki.
 ;;;;
 ;;;;   json is released under an MIT license.
 ;;;;   See json/docs/MIT-LICENSE for full license.
@@ -25,8 +25,8 @@
 
 (defmacro save-current-buffer (&body body)
   (with-gensyms (original)
-    `(let ((,original (selected-buffer)))
-       (with-set-buffer
+    `(with-set-buffer
+       (let ((,original (selected-buffer)))
          (unwind-protect
              (progn ,@body)
            (unless (deleted-buffer-p ,original)
@@ -38,7 +38,7 @@
     `(save-current-buffer
        (let ((,tmp (get-buffer-create ,name)))
          (unwind-protect
-             (with-set-buffer
+             (progn
                (set-buffer ,tmp)
                (erase-buffer ,tmp)
                ,@body)

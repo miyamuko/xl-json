@@ -1,3 +1,9 @@
+2011-07-28  MIYAMUKO Katsuyuki
+
+	* (save-current-buffer): with-set-buffer してから現在のバッファを
+	保存するようにした (#4)
+	https://github.com/miyamuko/xl-json/issues/4
+
 2010-07-21  MIYAMUKO Katsuyuki
 
 	* (with-temporary-buffer, json-decode, json-decode-file):
