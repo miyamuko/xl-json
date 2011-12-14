@@ -10,7 +10,7 @@ sources:
     - site-lisp/json/**/examples/*.l
 
 document:
-  - site-lisp/json/docs/README.rd
+  - README.md
 
 files:
   include:
