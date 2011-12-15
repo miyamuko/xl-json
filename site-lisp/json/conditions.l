@@ -25,22 +25,17 @@
           json-argument-error
           ))
 
-(defun format-list (destination control-string args)
-  (apply 'format (append (list destination control-string)
-                         args)))
-
-
 (define-condition json-simple-error (simple-error)
   ()
   (:report (lambda (c s)
-             (format-list s (json-simple-error-format-string c)
-                          (json-simple-error-format-arguments c)))))
+             (apply 'format s (json-simple-error-format-string c)
+                     (json-simple-error-format-arguments c)))))
 
 (define-condition json-parse-error (json-simple-error)
   ()
   (:report (lambda (c s)
-             (format-list s (json-parse-error-format-string c)
-                          (json-parse-error-format-arguments c)))))
+             (apply 'format s (json-parse-error-format-string c)
+                     (json-parse-error-format-arguments c)))))
 
 (defun raise-json-parse-error (format-string &rest format-arguments)
   (error 'json-parse-error
@@ -51,8 +46,8 @@
 (define-condition json-argument-error (json-simple-error)
   ()
   (:report (lambda (c s)
-             (format-list s (json-parse-error-format-string c)
-                          (json-parse-error-format-arguments c)))))
+             (apply 'format s (json-parse-error-format-string c)
+                     (json-parse-error-format-arguments c)))))
 
 (defun raise-json-argument-error (format-string &rest format-arguments)
   (error 'json-argument-error
