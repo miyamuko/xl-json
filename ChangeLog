@@ -1,5 +1,8 @@
 2011-12-15  MIYAMUKO Katsuyuki
 
+	* (json-decode-buffer): バッファの内容を JSON としてパースする API を追加 (#5)
+	https://github.com/miyamuko/xl-json/issues/5
+
 	* (json-decode-file, json-parse-error): エラーが発生した行番号と
 	カラム番号とファイル名 (json-decode-file の場合) を表示するようにした (#6)
 	https://github.com/miyamuko/xl-json/issues/6

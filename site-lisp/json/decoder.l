@@ -19,6 +19,7 @@
 
 (export '(json-decode
           json-decode-file
+          json-decode-buffer
           ))
 
 (defparameter *json-decode-buffer-name* " *json:decode*")
@@ -251,6 +252,17 @@
   (json-decode-internal #'(lambda ()
                             (read-file filename nil t))
                         filename options))
+
+(defun json-decode-buffer (buffer &rest options)
+  (check-type buffer (or string buffer))
+  (json-decode-internal #'(lambda ()
+                            (insert (save-current-buffer
+                                      (set-buffer buffer)
+                                      (buffer-substring (point-min) (point-max)))))
+                        (if (bufferp buffer)
+                            (buffer-name buffer)
+                          buffer)
+                        options))
 
 (defun json-decode-internal (initializer src options)
   (let ((options (parse-options options)))
