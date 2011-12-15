@@ -1,5 +1,8 @@
 2011-12-15  MIYAMUKO Katsuyuki
 
+	* (json-syntax-check-buffer, json-syntax-check-region): JSON の構文チェック
+	をするコマンドを追加
+
 	* (json-decode): 文字列先頭の空白文字は無視するようにした
 	(json-decode " [1]") ;;=> (1)
 

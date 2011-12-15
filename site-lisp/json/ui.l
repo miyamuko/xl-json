@@ -1,8 +1,8 @@
-; -*- mode: lisp; package: user -*-
+; -*- mode: lisp; package: user; encoding: shift_jis -*-
 
-;;; json.l
+;;; json/ui.l
 ;;
-;; Copyright (c) 2010 MIYAMUKO Katsuyuki.
+;; Copyright (c) 2011 MIYAMUKO Katsuyuki.
 ;;
 ;; Permission is hereby granted, free of charge, to any person obtaining
 ;; a copy of this software and associated documentation files (the
@@ -25,14 +25,11 @@
 
 ;;; Code:
 
+
 (in-package :user)
 
-(require "json/version")
-(require "json/encoder")
-(require "json/decoder")
-(require "json/accessor")
-(require "json/ui")
+(require "json/ui/syntax-checker")
 
-(provide "json")
+(provide "json/ui")
 
 ;;; End

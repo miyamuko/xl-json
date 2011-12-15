@@ -16,7 +16,17 @@
       (:use
        :lisp
        :editor
-       ))))
+       )))
+  (unless (find-package :json.ui)
+    (defpackage :json.ui
+      (:use
+       :lisp
+       :editor
+       :json
+       ))
+    (use-package :json.ui :user)
+    )
+  )
 
 
 (provide "json/package")
