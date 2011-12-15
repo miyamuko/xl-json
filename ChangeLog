@@ -1,5 +1,8 @@
 2011-12-15  MIYAMUKO Katsuyuki
 
+	* (parse-json-number): most-positive-single-float 以上で
+	most-positive-double-float 未満の数値をパースできるように修正
+
 	* (json-decode-file): ファイルを相対パスで指定した場合、
 	カレントバッファのデフォルトディレクトリからの相対パスで
 	ファイルを開く用にした

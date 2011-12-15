@@ -303,7 +303,7 @@ JSON テキストを読み込み S 式に変換します。
 
 ## KNOWN BUGS
 
-  * 巨大な数値は扱えません。
+  * most-positive-double-float 以上の数値は扱えません。
 
     ```lisp
     (json:json-decode "[23456789012E666]")

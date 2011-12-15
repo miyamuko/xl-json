@@ -54,6 +54,7 @@
   )
 
 (define-test json-decode/array-vector
+  (assert-type array (json-decode "[]" :json-array :array))
   (assert-equalp (make-vector 0)
       (json-decode "[]" :json-array :array))
   (assert-equalp (make-vector 3 :initial-contents '(1 2 3))
@@ -76,6 +77,7 @@
   )
 
 (define-test json-decode/object-hash-table
+  (assert-type hashtable (json-decode "{}" :json-object :hash-table))
   (assert-equalp (make-hash-table :test 'equal)
       (json-decode "{}" :json-object :hash-table))
   (assert-equalp (let ((h (make-hash-table :test 'equal)))
@@ -187,6 +189,29 @@
 ]")))
     (assert-double-equalp (car pair) (cdr pair)))
   )
+
+(define-test json-decode/number-scientific-notation-double
+  ;; most-positive-double-float => 1.797693134862316d308
+  ;; most-positive-single-float => 3.402823e38
+
+  (assert-double-equalp 3.402822e38 (car (json-decode "[3.402822e38]")))
+  (assert-double-equalp 3.402822e38 (car (json-decode "[3.402822e38]")))
+  (assert-type single-float (car (json-decode "[3.402822e38]")))
+
+  (assert-double-equalp 3.402822d39 (car (json-decode "[3.402822E39]")))
+  (assert-double-equalp 3.402822d39 (car (json-decode "[3.402822E39]")))
+  (assert-type double-float (car (json-decode "[3.402822e39]")))
+
+  (assert-double-equalp 1.797693134862315d308 (car (json-decode "[1.797693134862315e308]")))
+  (assert-double-equalp 1.797693134862315d308 (car (json-decode "[1.797693134862315E308]")))
+  (assert-type double-float (car (json-decode "[1.797693134862315E308]")))
+
+  (assert-error 'json-parse-error
+      (json-decode "[1.797693134862316e308]"))
+  (assert-error 'json-parse-error
+      (json-decode "[1.797693134862316E308]"))
+  )
+
 
 (define-test json-decode/no-strict-bare-string
   (assert-error 'json-parse-error

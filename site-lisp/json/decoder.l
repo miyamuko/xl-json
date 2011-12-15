@@ -141,10 +141,23 @@
 
 
 (defun parse-json-number (value)
-  (flet ((raise! (msg)
-           (raise-json-parse-error "invalid number: ~S (~A)" value msg)))
+  (labels ((raise! (msg)
+             (raise-json-parse-error "invalid number: ~S (~A)" value msg))
+           (read-number (str)
+             (identity (read-from-string str)))
+           (convert-double-float (str)
+             ;; 3e39 ‚ğ 3d39 ‚É‚·‚é
+             (substitute #\d #\e str :test #'char-equal))
+           (try-read-number (str)
+             (handler-case
+                 (read-number value)
+               (reader-error (c)
+                 (handler-case
+                     (read-number (convert-double-float value))
+                   (reader-error (_)
+                     (si:*throw-error c)))))))
     (handler-case
-        (let ((n (read (make-string-input-stream value))))
+        (let ((n (try-read-number value)))
           (unless (numberp n)
             (raise! "not a number"))
           n)
