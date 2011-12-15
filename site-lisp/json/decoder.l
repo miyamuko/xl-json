@@ -241,18 +241,22 @@
 
 (defun json-decode (json-text &rest options)
   (check-type json-text string)
-  (let ((options (parse-options options)))
-    (with-temporary-buffer (*json-decode-buffer-name*)
-      (insert json-text)
-      (scan-json-toplevel options))))
+  (json-decode-internal #'(lambda ()
+                            (insert json-text))
+                        nil options))
 
 (defun json-decode-file (filename &rest options)
   (check-type filename string)
   (setf filename (namestring filename))
+  (json-decode-internal #'(lambda ()
+                            (read-file filename nil t))
+                        filename options))
+
+(defun json-decode-internal (initializer src options)
   (let ((options (parse-options options)))
     (with-temporary-buffer (*json-decode-buffer-name*)
-      (read-file filename nil t)
-      (set-buffer-alternate-file-name filename)
+      (funcall initializer)
+      (set-buffer-alternate-file-name src)
       (unwind-protect
           (scan-json-toplevel options)
         (set-buffer-alternate-file-name nil)))))
