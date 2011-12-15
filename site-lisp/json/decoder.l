@@ -229,6 +229,7 @@
 
 (defun json-decode-file (filename &rest options)
   (check-type filename string)
+  (setf filename (namestring filename))
   (let ((options (parse-options options)))
     (with-temporary-buffer (*json-decode-buffer-name*)
       (read-file filename nil t)

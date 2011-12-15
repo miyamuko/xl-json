@@ -1,3 +1,9 @@
+2011-12-15  MIYAMUKO Katsuyuki
+
+	* (json-decode-file): ファイルを相対パスで指定した場合、
+	カレントバッファのデフォルトディレクトリからの相対パスで
+	ファイルを開く用にした
+
 2011-07-28  MIYAMUKO Katsuyuki
 
 	* (save-current-buffer): with-set-buffer してから現在のバッファを
