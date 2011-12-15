@@ -26,18 +26,16 @@
 (defmacro skip-ws ()
   `(skip-chars-forward " \t\r\f\n"))
 
-(defmacro skip-bare-word ()
-  `(prog1
-       (skip-chars-forward "^:,{}[]'\"")
-     (skip-chars-backward " \t\r\f\n")))
-
-(defmacro delete-json-padding ()
-  `(progn
-     (when (eq (char-before (point-max)) #\))
-       (delete-region (1- (point-max)) (point-max)))
-     (goto-char (point-min))
-     (when (looking-at " *[^(){}:,\"']*(")
-       (delete-region 0 (match-end 0)))))
+(defmacro narrow-to-json ()
+  `(let ((end (if (eq (char-before (point-max)) #\))
+                  (- (point-max) 1)
+                (point-max)))
+         (start (progn
+                  (goto-char (point-min))
+                  (if (looking-at "[^(){}:,\"']*(")
+                      (match-end 0)
+                    (point-min)))))
+     (narrow-to-region start end)))
 
 (defmacro current-char ()
   `(char-after (point)))
@@ -71,12 +69,8 @@
      ))
 
 (defmacro current-bare-word ()
-  `(let ((start (point))
-         (end (and
-               (skip-bare-word)
-               (point))))
-     (when (and start end)
-       (buffer-substring start end))))
+  `(and (looking-at "[^][{}:,'\" \t\r\f\n]+")
+        (match-string 0)))
 
 (defun scan-json-bare-value (options)
   (let ((word (current-bare-word)))
@@ -84,19 +78,20 @@
       (raise-if-eobp "json value")
       (raise-json-parse-error "unexpected '~A', expecting json value."
                               (current-char)))
-    (cond ((equal "null" word)
-           (option-json-null options))
-          ((equal "true" word)
-           (option-json-true options))
-          ((equal "false" word)
-           (option-json-false options))
-          ((string-matchp "^-?\\(0\\|[1-9][0-9]*\\)\\(\\.[0-9]+\\)?\\([eE][+-]?[0-9]+\\)?$" word)
-           (parse-json-number word))
-          (t
-           (when (option-strict options)
-             (raise-json-parse-error "bare word not allowed."))
-           word))))
-
+    (prog1
+        (cond ((equal "null" word)
+               (option-json-null options))
+              ((equal "true" word)
+               (option-json-true options))
+              ((equal "false" word)
+               (option-json-false options))
+              ((string-matchp "^-?\\(0\\|[1-9][0-9]*\\)\\(\\.[0-9]+\\)?\\([eE][+-]?[0-9]+\\)?$" word)
+               (parse-json-number word))
+              (t
+               (when (option-strict options)
+                 (raise-json-parse-error "bare word, ~S, not allowed." word))
+               word))
+      (forward-char (length word)))))
 
 (defparameter *unicode-char* "\\\\u[a-fA-F0-9]\\{4\\}")
 (defparameter *escaped-char* "\\\\.")
@@ -105,36 +100,46 @@
 (defparameter *re-single-quote-string*
   (compile-regexp (re-union *unicode-char* *escaped-char* "'")))
 
-(defmacro scan-json-string-internal (re)
-  `(let ((start (point)))
-     (block scan-json-string-internal
-       (while (scan-buffer ,re :tail t :regexp t)
-         (when (match-beginning 1) ;; unicode escape
-           (replace-match (string
-                           (unicode-char
-                            (parse-integer (match-string 1) :start 2 :radix 16)))))
-         (when (match-beginning 2) ;; escaped char
-           (replace-match (cdr (assoc (match-string 2) *json-lisp-escaped-chars*
-                                      :test #'string=))))
-         (when (match-beginning 3) ;; end of string
-           (return-from scan-json-string-internal
-             (buffer-substring start (1- (point))))))
-       (raise-json-parse-error "unterminated string: ~S"
-                               (buffer-substring (1- start) (point-max))))))
+(defmacro scan-json-string-internal (quote-char re)
+  `(progn
+     (skip-char ,quote-char)
+     (let ((start (point))
+           (last-match (point))
+           r)
+       (block scan-json-string-internal
+         (while (scan-buffer ,re :tail t :regexp t)
+           (push (buffer-substring last-match (match-beginning 0)) r)
+           (cond ((match-beginning 1) ;; unicode escape
+                  (push (string
+                         (unicode-char
+                          (parse-integer (match-string 1) :start 2 :radix 16)))
+                        r))
+                 ((match-beginning 2) ;; escaped char
+                  (push (cdr (assoc (match-string 2) *json-lisp-escaped-chars*
+                                    :test #'string=))
+                        r))
+                 ((match-beginning 3) ;; end of string
+                  (return-from scan-json-string-internal
+                    (format nil "~{~A~}" (nreverse r)))))
+           (setf last-match (match-end 0)))
+         ;; ÉJÉâÉÄî‘çÜÇçáÇÌÇπÇÈÇΩÇﬂ (skip-char quote-char) ÇµÇΩï™ñﬂÇÈ
+         (backward-char)
+         (raise-json-parse-error "unterminated string: ~S"
+                                 (buffer-substring (1- start) (point-max)))))))
 
 (defmacro scan-json-double-quote-string (options)
-  `(scan-json-string-internal *re-double-quote-string*))
+  `(scan-json-string-internal #\" *re-double-quote-string*))
 
 (defmacro scan-json-single-quote-string (options)
   `(progn
      (when (option-strict ,options)
        (raise-json-parse-error "single quoted string not allowed."))
-     (scan-json-string-internal *re-single-quote-string*)))
+     (scan-json-string-internal #\' *re-single-quote-string*)))
 
 (defmacro scan-json-string (options)
-  `(cond ((skip-char-if #\")
+  `(cond ((current-char= #\")
           (scan-json-double-quote-string ,options))
-         ((skip-char-if #\')
+         ((current-char= #\')
           (scan-json-single-quote-string ,options))
          (t
           (scan-json-bare-value ,options))))
@@ -178,7 +183,8 @@
      ((#\" #\')
       (raise-json-parse-error "unexpected string, expecting object or array."))
      (t
-      (raise-json-parse-error "unexpected bare word, expecting object or array."))))
+      (raise-if-eobp "object or array")
+      (raise-json-parse-error "unexpected bare word, ~S, expecting object or array." (current-bare-word)))))
 
 (defun scan-json-object (options)
   (skip-char #\{)
@@ -228,8 +234,8 @@
   (goto-char (point-min))
   (if (option-strict options)
       (scan-json-object/array options)
-    (progn
-      (delete-json-padding)
+    (save-restriction
+      (narrow-to-json)
       (skip-ws)
       (scan-json-value options))))
 
@@ -246,7 +252,10 @@
   (let ((options (parse-options options)))
     (with-temporary-buffer (*json-decode-buffer-name*)
       (read-file filename nil t)
-      (scan-json-toplevel options))))
+      (set-buffer-alternate-file-name filename)
+      (unwind-protect
+          (scan-json-toplevel options)
+        (set-buffer-alternate-file-name nil)))))
 
 
 (provide "json/decoder")

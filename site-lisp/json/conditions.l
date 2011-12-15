@@ -23,10 +23,14 @@
 (export '(json-simple-error
           json-parse-error
           json-argument-error
+
+          json-parse-error-filename
+          json-parse-error-linenum
+          json-parse-error-column
           ))
 
 (define-condition json-simple-error (simple-error)
-  ()
+  (filename linenum column)
   (:report (lambda (c s)
              (apply 'format s (json-simple-error-format-string c)
                      (json-simple-error-format-arguments c)))))
@@ -34,11 +38,20 @@
 (define-condition json-parse-error (json-simple-error)
   ()
   (:report (lambda (c s)
-             (apply 'format s (json-parse-error-format-string c)
-                     (json-parse-error-format-arguments c)))))
+             (format s "~A~%line: ~A, column: ~A~@[~%file: ~A~]"
+                     (apply 'format nil
+                            (json-parse-error-format-string c)
+                            (json-parse-error-format-arguments c))
+                     (json-parse-error-linenum c)
+                     (json-parse-error-column c)
+                     (json-parse-error-filename c)
+                     ))))
 
 (defun raise-json-parse-error (format-string &rest format-arguments)
   (error 'json-parse-error
+         :filename (get-buffer-alternate-file-name)
+         :linenum (current-line-number)
+         :column (current-column)
          :format-string (concat "json parse error: " format-string)
          :format-arguments format-arguments))
 
