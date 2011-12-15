@@ -234,7 +234,9 @@
 (defun scan-json-toplevel (options)
   (goto-char (point-min))
   (if (option-strict options)
-      (scan-json-object/array options)
+      (progn
+        (skip-ws)
+        (scan-json-object/array options))
     (save-restriction
       (narrow-to-json)
       (skip-ws)

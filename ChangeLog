@@ -1,5 +1,8 @@
 2011-12-15  MIYAMUKO Katsuyuki
 
+	* (json-decode): 文字列先頭の空白文字は無視するようにした
+	(json-decode " [1]") ;;=> (1)
+
 	* (json-decode-buffer): バッファの内容を JSON としてパースする API を追加 (#5)
 	https://github.com/miyamuko/xl-json/issues/5
 
