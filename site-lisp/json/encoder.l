@@ -86,6 +86,8 @@
          (json-write-list object options))
         ((stringp object)
          (json-write-string object options))
+        ((characterp object)
+         (json-write-character object options))
         ((symbolp object)
          (json-write-string (symbol-name object) options))
         ((numberp object)
@@ -136,6 +138,9 @@
               ))))
   (puts "\"")
   )
+
+(defun json-write-character (object options)
+  (json-write-string (string object) options))
 
 (defun json-write-number (object options)
   (cond ((integerp object)

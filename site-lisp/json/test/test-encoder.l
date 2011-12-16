@@ -163,6 +163,31 @@
       (json:json-encode (list (string (unicode-char #x1D11E)))))
   )
 
+(define-test json-encode/character
+  (assert-equal "[\"a\"]"
+      (json-encode '(#\a)))
+  (assert-equal "[\"a\",\"b\"]"
+      (json-encode '(#\a #\b)))
+  )
+
+(define-test json-encode/character-escape
+  (assert-equal "[\"\\\"\",\"\\\\\",\"\\/\",\"\\b\",\"\\f\",\"\\n\",\"\\r\",\"\\t\"]"
+      (json-encode '(#\" #\\ #\/ #\C-h #\C-l #\LFD #\RET #\TAB)))
+  )
+
+
+(define-test json-encode/character-unicode
+  (assert-equal "[\"\\u3042\"]"
+      (json-encode '(#\あ)))
+  (assert-equal "[\"\\u3042\",\"\\u3044\",\"\\u3046\",\"\\u3048\",\"\\u304a\",\"a\",\"b\",\"c\",\"\\u30a2\",\"\\u30a4\",\"\\u30a6\",\"\\u30a8\",\"\\u30aa\"]"
+      (json-encode '(#\あ #\い #\う #\え #\お #\a #\b #\c #\ア #\イ #\ウ #\エ #\オ)))
+
+  ;; #\latin_capital_letter_a_with_acute                => #\x0141
+  ;; (char-unicode #\latin_capital_letter_a_with_acute) => 193 (U+00C1)
+  (assert-equal "[\"\\u00c1\"]"
+      (json-encode '(#\latin_capital_letter_a_with_acute)))
+  )
+
 (define-test json-encode/number-integer
   (assert-equal "{\"foo\":1}"
       (json-encode '(("foo" . 1))))
@@ -197,8 +222,6 @@
   )
 
 (define-test json-encode/not-supported-type
-  (assert-error 'json-argument-error
-      (json-encode '(#\a)))
   (assert-error 'json-argument-error
       (json-encode '(1/3)))
   (assert-error 'json-argument-error
