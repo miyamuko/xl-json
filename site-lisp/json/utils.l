@@ -66,18 +66,6 @@
   (format nil "~{\\(~A\\)~^\\|~}" re-list))
 
 
-
-
-(defun D0(&rest args)
-  (msgbox "~S~%line=~D, col=~D, point=~D~%[~A~A]"
-          args
-          (current-line-number) (current-column) (point)
-          (char-before (point))
-          (char-after (point))
-          )
-  (car (last args)))
-
-
 (provide "json/utils")
 
 ;;;; End
