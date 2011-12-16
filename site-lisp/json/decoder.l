@@ -94,7 +94,7 @@
                word))
       (forward-char (length word)))))
 
-(defparameter *unicode-char* "\\\\u[a-fA-F0-9]\\{4\\}")
+(defparameter *unicode-char* "\\\\u[a-fA-F0-9]\\{1,4\\}")
 (defparameter *escaped-char* "\\\\.")
 (defparameter *re-double-quote-string*
   (compile-regexp (re-union *unicode-char* *escaped-char* "\"")))
@@ -111,14 +111,18 @@
          (while (scan-buffer ,re :tail t :regexp t)
            (push (buffer-substring last-match (match-beginning 0)) r)
            (cond ((match-beginning 1) ;; unicode escape
-                  (push (string
-                         (unicode-char
-                          (parse-integer (match-string 1) :start 2 :radix 16)))
-                        r))
+                  (when (/= (length (match-string 1)) (+ 2 4))
+                    (raise-json-parse-error "Invalid unicode sequence. ~A" (match-string 0)))
+                  (let ((c (unicode-char (parse-integer (match-string 1) :start 2 :radix 16))))
+                    (unless c
+                      (raise-json-parse-error "Unknown unicode character. ~A" (match-string 0)))
+                    (push (string c) r)))
                  ((match-beginning 2) ;; escaped char
-                  (push (cdr (assoc (match-string 2) *json-lisp-escaped-chars*
-                                    :test #'string=))
-                        r))
+                  (let ((c (cdr (assoc (match-string 2) *json-lisp-escaped-chars*
+                                       :test #'string=))))
+                    (unless c
+                      (raise-json-parse-error "Unknown escape sequence. ~A" (match-string 0)))
+                    (push c r)))
                  ((match-beginning 3) ;; end of string
                   (return-from scan-json-string-internal
                     (format nil "~{~A~}" (nreverse r)))))

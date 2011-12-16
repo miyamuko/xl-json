@@ -128,12 +128,44 @@
   )
 
 (define-test json-decode/string
+  (assert-equal '("")
+      (json-decode "[\"\"]"))
   (assert-equal '("foo")
       (json-decode "[\"foo\"]"))
+  (assert-equal '("foo bar")
+      (json-decode "[\"foo bar\"]"))
+  (let ((long-string (make-sequence 'string 100000 :initial-element #\a)))
+    (assert-equal (list long-string)
+        (json-decode (format nil "[\"~A\"]" long-string))))
+  )
+
+(define-test json-decode/string-escape
+  (assert-equal '("\"\\\/\b\f\n\r\t")
+      (json-decode "[\"\\\"\\\\\\/\\b\\f\\n\\r\\t\"]"))
+  (assert-equal '("foo\nbar")
+      (json-decode "[\"foo\\nbar\"]"))
+  (assert-equal '("foo\tbar")
+      (json-decode "[\"foo\\tbar\"]"))
+  (assert-equal '("foo\t")
+      (json-decode "[\"foo\\t\"]"))
+  (assert-equal '("\"foo\"")
+      (json-decode "[\"\\\"foo\\\"\"]"))
+  )
+
+(define-test json-decode/string-escape/invalid-sequence
+  (assert-error 'json-parse-error
+      (json-decode "[\"abc\\w\\z\"]" :strict t))
+  (assert-error 'json-parse-error
+      (json-decode "[\"abc\\w\\z\"]" :strict nil))
+  )
+
+(define-test json-decode/string-unicode
   (assert-equal '("あ")
       (json-decode "[\"あ\"]"))
   (assert-equal '("あ")
       (json-decode "[\"\\u3042\"]"))
+  (assert-equal '("あいうえおabcアイウエオ")
+      (json-decode "[\"\\u3042\\u3044\\u3046\\u3048\\u304Aabc\\u30A2\\u30A4\\u30A6\\u30A8\\u30AA\"]"))
   (assert-equal '("はてなスター日記")
       (json-decode "[\"\\u306f\\u3066\\u306a\\u30b9\\u30bf\\u30fc\\u65e5\\u8a18\"]"))
 
@@ -141,6 +173,30 @@
   ;; (char-unicode #\latin_capital_letter_a_with_acute) => 193 (U+00C1)
   (assert-equal '("\X0141" "\X0141")
       (json-decode "[\"\\u00C1\", \"\\u00c1\"]"))
+
+  ;; To escape an extended character that is not in the Basic Multilingual
+  ;; Plane, the character is represented as a twelve-character sequence,
+  ;; encoding the UTF-16 surrogate pair.  So, for example, a string
+  ;; containing only the G clef character (U+1D11E) may be represented as
+  ;; "\uD834\uDD1E".
+  (assert-equal (list (string (unicode-char #x1D11E)))
+      (json:json-decode "[\"\\uD834\\uDD1E\"]"))
+  )
+
+(define-test json-decode/string-unicode/invalid-sequence
+  (assert-error 'json-parse-error
+      (json-decode "[\"\\u2\"]"))
+  (assert-error 'json-parse-error
+      (json-decode "[\"\\u20\"]"))
+  (assert-error 'json-parse-error
+      (json-decode "[\"\\u020\"]"))
+
+  (assert-equal '(" ")
+      (json-decode "[\"\\u0020\"]"))
+  (assert-equal '(" a")
+      (json-decode "[\"\\u0020a\"]"))
+  (assert-equal '(" abcdef")
+      (json-decode "[\"\\u0020abcdef\"]"))
   )
 
 (define-test json-decode/number-integer
