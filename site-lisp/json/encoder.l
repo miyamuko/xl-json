@@ -50,17 +50,41 @@
     (raise-json-argument-error "~S (~A) not allowed (only arrays or objects). Try :strict nil option."
                                object (type-of object)))
   (if (option-padding options)
-      (json-write-value-with-padding object options)
-    (json-write-value object options)))
+      (json-write-toplevel-with-padding object options)
+    (json-write-toplevel object options)))
 
-(defun json-write-value-with-padding (object options)
+(defun json-write-toplevel-with-padding (object options)
   (puts (option-padding options))
   (puts "(")
-  (json-write-value object options)
+  (json-write-toplevel object options)
   (puts ")"))
 
+(defun json-write-toplevel (object options)
+  (cond ((simple-vector-p object)
+         (json-write-array object options))
+        ((hash-table-p object)
+         (json-write-hash-table object options))
+        ((null object)
+         (if (eq (option-json-object options) :hash-table)
+             (json-write-list object options)
+           (json-write-alist object options)))
+        ((alistp object)
+         (json-write-alist object options))
+        ((listp object)
+         (json-write-list object options))
+        (t
+         (raise-json-argument-error "~S (~A) not supported in toplevel" object (type-of object)))))
+
 (defun json-write-value (object options)
-  (cond ((stringp object)
+  (cond ((eql (option-json-null options) object)
+         (json-write-bare-word "null" options))
+        ((eql (option-json-true options) object)
+         (json-write-bare-word "true" options))
+        ((eql (option-json-false options) object)
+         (json-write-bare-word "false" options))
+        ((null object)
+         (json-write-list object options))
+        ((stringp object)
          (json-write-string object options))
         ((symbolp object)
          (json-write-string (symbol-name object) options))
@@ -78,10 +102,13 @@
          (raise-json-argument-error "~S (~A) not supported" object (type-of object)))))
 
 
+(defun json-write-bare-word (object options)
+  (puts object))
+
 (defparameter *json-char-kind*
   (compile-regexp
-   (re-union "[/\b\t\n\r\t\"\\]"               ; special char
-             "[\x20-\x7F]+"                    ; ascii char
+   (re-union "[/\b\t\n\r\t\f\"\\]"             ; special char
+             "[\x20-\x7E]"                     ; ascii char
              "[\Xd600-\Xd6ff][\Xd700-\Xd7ff]"  ; undef unicode char
              "."                               ; other char
              )))
@@ -111,7 +138,14 @@
   )
 
 (defun json-write-number (object options)
-  (puts (if (integerp object) "~D" "~F") object))
+  (cond ((integerp object)
+         (puts "~D" object))
+        ((single-float-p object)
+         (puts "~F" object))
+        ((double-float-p object)
+         (puts (substitute #\e #\d (format nil "~F" object))))
+        (t
+         (raise-json-argument-error "~S (~A) not supported" object (type-of object)))))
 
 (defun json-write-list (object options)
   (write-each mapcar #'(lambda (obj)
