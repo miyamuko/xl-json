@@ -122,9 +122,9 @@
       (json-encode '("foo")))
   (assert-equal "[\"foo bar\"]"
       (json-encode '("foo bar")))
-;  (let ((long-string (make-sequence 'string 100000 :initial-element #\a)))
-;    (assert-equal (format nil "[\"~A\"]" long-string)
-;        (json-encode (list long-string))))
+  (let ((long-string (make-sequence 'string 100000 :initial-element #\a)))
+    (assert-equal (format nil "[\"~A\"]" long-string)
+        (json-encode (list long-string))))
   )
 
 (define-test json-encode/string-escape

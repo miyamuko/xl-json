@@ -110,32 +110,32 @@
 (defparameter *json-char-kind*
   (compile-regexp
    (re-union "[/\b\t\n\r\t\f\"\\]"             ; special char
-             "[\x20-\x7E]"                     ; ascii char
              "[\Xd600-\Xd6ff][\Xd700-\Xd7ff]"  ; undef unicode char
-             "."                               ; other char
              )))
 (defun json-write-string (object options)
   (puts "\"")
-  (let ((start 0))
-    (while (string-match *json-char-kind* object start)
-      (setf start (match-end 0))
-      (multiple-value-bind (special ascii undef other)
-          (values-list (mapcar 'match-string '(1 2 3 4)))
-        (cond (special
-               (puts (lisp-char->json-char special)))
-              (ascii
-               (puts ascii))
-              (undef
-               (puts
-                (encode-unicode-char
-                 (combine-undef-char (undef-char-high (char-code (char undef 0)))
-                                     (undef-char-low (char-code (char undef 1)))))))
-              (other
-               (let ((c (char-unicode (char other 0))))
-                 (if (< c #x7f)
-                     (puts other)
-                   (puts (encode-unicode-char c)))))
-              ))))
+  (let ((last-match 0))
+    (while (string-match *json-char-kind* object last-match)
+      (map nil #'(lambda (char)
+                   (let ((code (char-unicode char)))
+                     (if (< code #x7f)
+                         (puts (string char))
+                       (puts (encode-unicode-char code)))))
+           (substring object last-match (match-beginning 0)))
+      (cond ((match-string 1) ; special char
+             (puts (lisp-char->json-char (match-string 1))))
+            ((match-string 2) ; undef unicode char
+             (let ((undef (match-string 2)))
+               (puts (encode-unicode-char
+                      (combine-undef-char (undef-char-high (char-code (char undef 0)))
+                                          (undef-char-low (char-code (char undef 1)))))))))
+      (setf last-match (match-end 0)))
+    (map nil #'(lambda (char)
+                 (let ((code (char-unicode char)))
+                   (if (< code #x7f)
+                       (puts (string char))
+                     (puts (encode-unicode-char code)))))
+         (substring object last-match)))
   (puts "\"")
   )
 
