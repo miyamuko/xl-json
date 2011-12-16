@@ -77,7 +77,7 @@
   )
 
 (define-test json-decode/object-hash-table
-  (assert-type hashtable (json-decode "{}" :json-object :hash-table))
+  (assert-type hash-table (json-decode "{}" :json-object :hash-table))
   (assert-equalp (make-hash-table :test 'equal)
       (json-decode "{}" :json-object :hash-table))
   (assert-equalp (let ((h (make-hash-table :test 'equal)))
@@ -86,7 +86,7 @@
       (json-decode "{\"foo\":\"bar\"}" :json-object :hash-table))
   )
 
-(define-test json-decode/object-hash-table
+(define-test json-decode/object-hash-table-test
   (dolist (test '(eq eql equal equalp))
     (assert-equal test
         (hash-table-test (json-decode "{}" :json-object :hash-table :hash-table-test test))))
@@ -330,6 +330,24 @@ baz: null  }" :strict nil))
       (json-decode "foo({1:2})" :strict nil))
   )
 
+(define-test json-decode/leading-whitespace
+  (assert-equal '(("foo" . "bar"))
+      (json-decode " {\"foo\":\"bar\"}" :strict t))
+  (assert-equal '(("foo" . "bar"))
+      (json-decode "  {\"foo\":\"bar\"}  " :strict t))
+  (assert-equal '(("foo" . "bar"))
+      (json-decode "  {  \"foo\"  :  \"bar\"  }  " :strict t))
+
+  (assert-equal '(("foo" . "bar"))
+      (json-decode " {\"foo\":\"bar\"}" :strict nil))
+  (assert-equal '(("foo" . "bar"))
+      (json-decode "  {\"foo\":\"bar\"}  " :strict nil))
+  (assert-equal '(("foo" . "bar"))
+      (json-decode "  {  \"foo\"  :  \"bar\"  }  " :strict nil))
+  (assert-equal '(("foo" . "bar"))
+      (json-decode "  Ten.JSONP({  \"foo\"  :  \"bar\"  })  " :strict nil))
+  )
+
 (define-test json-decode/error
   (assert-error 'json-argument-error
       (json-decode "{}" :strict nil :json-object t))
@@ -372,24 +390,27 @@ baz: null  }" :strict nil))
       (json-decode-file "no such file"))
   )
 
+;; example.json を S 式にしたもの
+;; example.json は http://json.org/example.html から作成
+(defconstant +json-example-sexp+
+  '(("glossary"
+     ("title" . "example glossary")
+     ("GlossDiv"
+      ("title" . "S")
+      ("GlossList"
+       ("GlossEntry"
+        ("ID" . "SGML")
+        ("SortAs" . "SGML")
+        ("GlossTerm" . "Standard Generalized Markup Language")
+        ("Acronym" . "SGML")
+        ("Abbrev" . "ISO 8879:1986")
+        ("GlossDef" .
+         (("para" . "A meta-markup language, used to create markup languages such as DocBook.")
+          ("GlossSeeAlso" "GML" "XML")))
+        ("GlossSee" . "markup")))))))
+
 (define-test json-decode-file/json-org-example
-  ;; http://json.org/example.html
-  (assert-equalp
-      '(("glossary"
-         ("title" . "example glossary")
-         ("GlossDiv"
-          ("title" . "S")
-          ("GlossList"
-           ("GlossEntry"
-            ("ID" . "SGML")
-            ("SortAs" . "SGML")
-            ("GlossTerm" . "Standard Generalized Markup Language")
-            ("Acronym" . "SGML")
-            ("Abbrev" . "ISO 8879:1986")
-            ("GlossDef" .
-             (("para" . "A meta-markup language, used to create markup languages such as DocBook.")
-              ("GlossSeeAlso" "GML" "XML")))
-            ("GlossSee" . "markup"))))))
+  (assert-equalp +json-example-sexp+
       (json-decode-file "example.json"))
   )
 
@@ -397,4 +418,51 @@ baz: null  }" :strict nil))
   (assert-equal "1715"
       (cdr (assoc "count" (json-decode-file "hatebu.json" :strict nil)
                   :test #'equal)))
+  )
+
+(define-test json-decode-buffer
+  (let ((b (get-buffer-create "*json:test*")))
+    (unwind-protect
+        (json::save-current-buffer
+          (set-buffer b)
+          (insert-file-contents "example.json")
+          (assert-equalp +json-example-sexp+
+              (json-decode-buffer "*json:test*"))
+          (assert-equalp +json-example-sexp+
+              (json-decode-buffer (find-buffer "*json:test*")))
+          )
+      (delete-buffer b)))
+  )
+
+(define-test json-decode-buffer/read-only
+  (let ((b (get-buffer-create "*json:test*")))
+    (unwind-protect
+        (progn
+          (json::save-current-buffer
+            (set-buffer b)
+            (insert-file-contents "example.json")
+            (toggle-read-only t))
+          (assert-equalp +json-example-sexp+
+              (json-decode-buffer "*json:test*"))
+          (assert-equalp +json-example-sexp+
+              (json-decode-buffer (find-buffer "*json:test*")))
+          )
+      (delete-buffer b)))
+  )
+
+(define-test json-decode-buffer/error
+  (assert-error 'type-error
+      (json-decode-buffer nil))
+  (assert-error 'type-error
+      (json-decode-buffer 123))
+
+  ;; 存在しないバッファ
+  (assert-error 'simple-error
+      (json-decode-buffer "*no such buffer*"))
+
+  ;; 削除されたバッファ
+  (let ((b (create-new-buffer "*test*")))
+    (delete-buffer b)
+    (assert-error 'simple-error
+        (json-decode-buffer b)))
   )
