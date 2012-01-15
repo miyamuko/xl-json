@@ -122,6 +122,10 @@
       (json-encode '("foo")))
   (assert-equal "[\"foo bar\"]"
       (json-encode '("foo bar")))
+  (assert-equal "[\"~\"]"
+      (json-encode '("~")))
+  (assert-equal "[\"foo bar ~A\"]"
+      (json-encode '("foo bar ~A")))
   (let ((long-string (make-sequence 'string 100000 :initial-element #\a)))
     (assert-equal (format nil "[\"~A\"]" long-string)
         (json-encode (list long-string))))

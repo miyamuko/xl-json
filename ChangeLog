@@ -1,3 +1,7 @@
+2012-01-15  MIYAMUKO Katsuyuki
+
+	* (puts): (json-encode '("~")) が失敗していたのを修正
+
 2011-12-16  MIYAMUKO Katsuyuki
 
 	* (scan-json-string-internal): 不正なエスケープシーケンスがあったら

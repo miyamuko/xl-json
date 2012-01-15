@@ -65,7 +65,9 @@
 
 
 (defmacro puts (fmt &rest args)
-  `(format t ,fmt ,@args))
+  (if args
+      `(format t ,fmt ,@args)
+    `(format t "~A" ,fmt)))
 
 (defmacro write-each (map-fn fn object &optional prefix suffix infix)
   `(let ((first t))
